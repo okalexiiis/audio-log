@@ -1,0 +1,53 @@
+services:
+  backend:
+    build: . # Indica a Docker Compose que construya la imagen con el Dockerfile en la carpeta actual
+    container_name: audio_log_backend
+    ports:
+      - "3000:3000" # Mapea el puerto de la aplicación
+    environment:
+      # Pasa la URL de conexión a la DB, usando el nombre del servicio 'database'
+      DATABASE_URL: "postgresql://mysecretuser:mysecretpassword@database:5432/audio-log-db"
+    depends_on:
+      - database # Asegura que la DB esté lista antes de iniciar la app
+
+  # Servicio de la base de datos PostgreSQL
+  database:
+    image: postgres:18-alpine # La imagen que especificaste
+    container_name: postgres_db
+    restart: always
+    environment:
+      # Variables de entorno OBLIGATORIAS para PostgreSQL
+      POSTGRES_USER: mysecretuser # Usuario de la base de datos
+      POSTGRES_PASSWORD: mysecretpassword # Contraseña del usuario
+      POSTGRES_DB: audio-log-db # Nombre de la base de datos inicial
+    ports:
+      # Mapeo de puertos: host_port:container_port
+      # Puedes cambiar el 5432:5432 si el 5432 ya está en uso en tu host
+      - "5432:5432"
+    volumes:
+      # Volumen para la persistencia de los datos de la base de datos
+      - postgres_data:/var/lib/postgresql/data
+
+  # Servicio de pgAdmin (interfaz de administración web para PostgreSQL)
+  pg-admin:
+    image: dpage/pgadmin4:latest # Una imagen común de pgAdmin
+    container_name: pgadmin_container
+    restart: always
+    environment:
+      # Variables de entorno OBLIGATORIAS para pgAdmin
+      PGADMIN_DEFAULT_EMAIL: admin@example.com # Email de inicio de sesión de pgAdmin
+      PGADMIN_DEFAULT_PASSWORD: myadminpassword # Contraseña de inicio de sesión de pgAdmin
+    ports:
+      # Mapeo de puertos: puerto_host:puerto_contenedor (pgAdmin usa el puerto 80 por defecto)
+      - "8080:80"
+    volumes:
+      # Volumen para la persistencia de la configuración de pgAdmin
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      # Asegura que la base de datos se inicie antes que pgAdmin
+      - database
+
+# Definición de volúmenes para persistencia
+volumes:
+  postgres_data:
+  pgadmin_data:

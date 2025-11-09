@@ -1,0 +1,14 @@
+# deps
+node_modules/
+# logs
+logs/
+# env
+.env
+
+# locks
+bun.lock
+package.lock
+
+# builds
+build/
+dist/
