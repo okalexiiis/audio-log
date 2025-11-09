@@ -2,6 +2,9 @@ services:
   backend:
     build: . # Indica a Docker Compose que construya la imagen con el Dockerfile en la carpeta actual
     container_name: audio_log_backend
+    volumes:
+      - .:/app
+      - /app/node_modules
     ports:
       - "3000:3000" # Mapea el puerto de la aplicación
     environment:

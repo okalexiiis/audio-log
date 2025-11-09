@@ -2,14 +2,17 @@
 FROM oven/bun:1 AS base
 
 # Establece el directorio de trabajo
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # Copia los archivos de definición de paquetes e instala dependencias
 COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 
 # Copia el resto del código de la aplicación
-COPY . .
+# COPY . .
+
+# NODE ENV
+ENV NODE_ENV=development
 
 # Expone el puerto que usa tu app (ej: 3000)
 EXPOSE 3000
