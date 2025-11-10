@@ -4,7 +4,7 @@ import { UserLink } from "../../models/UserLinks";
 export type UserLinkFilters = Partial<Pick<UserLink, "id">>;
 export type NewUserLink = Omit<UserLink, "id">;
 
-export interface UserRepository {
+export interface UserLinkRepository {
   save(newUserLink: NewUserLink): Promise<UserLink>;
   findAll(
     options?: PaginationParams<UserLink> & { includeTotal: boolean | false },
