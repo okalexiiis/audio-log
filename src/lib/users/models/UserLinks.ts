@@ -1,8 +1,8 @@
 import { integer, pgTable, varchar } from "drizzle-orm/pg-core";
 import { Users } from "./User";
-import { Platforms } from "../interfaces/users/platforms";
+import { Platforms } from "../interfaces/user-links/platforms";
 
-export const UserLinks = pgTable("users_details", {
+export const UserLinks = pgTable("user_links", {
   user_link_id: integer().primaryKey().generatedAlwaysAsIdentity(),
   fk_user_id: integer()
     .references(() => Users.user_id, { onDelete: "cascade" })
