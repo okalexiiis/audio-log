@@ -34,3 +34,9 @@ export class ApplicationError extends Error {
     }
   }
 }
+
+export class NotFoundError extends ApplicationError {
+  constructor(message = "RECURSO NO ENCONTRADO", code = "NOT_FOUND") {
+    super(code, message, 404);
+  }
+}
