@@ -56,24 +56,50 @@ export class UserDrizzleRepository implements UserRepository {
     return data;
   }
 
-  async findOne(filters: UserFilters): Promise<User | null> {
-    // to implement
-    return null;
+  async findOne({
+    user_id,
+    username,
+    email,
+  }: Omit<UserFilters, "created_at">): Promise<User | null> {
+    const where = [];
+
+    if (username !== undefined) where.push(eq(Users.username, username));
+    if (email !== undefined) where.push(eq(Users.email, email));
+    if (user_id !== undefined) where.push(eq(Users.user_id, user_id));
+
+    if (where.length === 0) {
+      throw new Error("Debe proporcionar al menos un filtro para findOne()");
+    }
+
+    const result = await this._db
+      .select()
+      .from(Users)
+      .where(and(...where))
+      .limit(1);
+
+    return result[0] ?? null;
   }
 
   async delete(id: number): Promise<boolean> {
-    return true;
+    const result = await this._db
+      .delete(Users)
+      .where(eq(Users.user_id, id))
+      .returning();
+
+    return result.length > 0;
   }
 
   async update(id: number, newUser: Partial<NewUser>): Promise<User> {
-    return {
-      about: "",
-      avatar_url: "",
-      created_at: new Date(),
-      email: "",
-      password_hash: "",
-      user_id: 1,
-      username: "",
-    } as User;
+    const updated = await this._db
+      .update(Users)
+      .set(newUser)
+      .where(eq(Users.user_id, id))
+      .returning();
+
+    if (updated.length === 0) {
+      return null as any;
+    }
+
+    return updated[0];
   }
 }
