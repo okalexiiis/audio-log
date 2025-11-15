@@ -5,6 +5,8 @@ import { Logger, TLOG_LEVEL } from "./core/utils/logger";
 import { requestLogger } from "./core/middlewares";
 import UserRouter from "./lib/users/routes";
 import { DomainError } from "./core/types/domain-errors";
+import { ApplicationError } from "./core/types/application-errors";
+import { ContentfulStatusCode } from "hono/utils/http-status";
 
 const app = new Hono();
 const log_level = process.env.LOG_LEVEL! as TLOG_LEVEL;
@@ -19,14 +21,6 @@ app.get("/", (c) => {
   return c.json({ message: "Hello World" });
 });
 
-app.get("/test", async (c) => {
-  const repo = new UserDrizzleRepository();
-
-  const users = await repo.findAll({}, { username: "ito" });
-
-  return c.json({ data: users });
-});
-
 app.onError((err: any, c) => {
   logger.danger("CATCH ERROR", err.message, err);
   if (err instanceof DomainError) {
@@ -35,7 +29,17 @@ app.onError((err: any, c) => {
       err.status,
     );
   }
-  return c.json({ cause: err.cause, message: err.message, name: err.name });
+
+  if (err instanceof ApplicationError) {
+    return c.json(
+      { message: err.message, code: err.code },
+      err.status as ContentfulStatusCode,
+    );
+  }
+  return c.json(
+    { cause: err.cause, message: err.message, name: err.name },
+    500,
+  );
 });
 
 export default app;
