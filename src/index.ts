@@ -10,7 +10,7 @@ import { ContentfulStatusCode } from "hono/utils/http-status";
 
 const app = new Hono();
 const log_level = process.env.LOG_LEVEL! as TLOG_LEVEL;
-const logger = new Logger(log_level);
+export const logger = new Logger(log_level);
 
 // Pre-Request Middlewares
 app.use("*", requestLogger(logger));
