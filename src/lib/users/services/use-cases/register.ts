@@ -1,11 +1,14 @@
+import { Logger } from "@/core/utils/logger";
 import { registerUserDTO } from "../../interfaces/users/dtos/register-user.dto";
 import { UserRepository } from "../../interfaces/users/repository";
 import { User } from "../../models/User";
 import { UserDrizzleRepository } from "../repositories/user.repository";
 import { UserValidator } from "../validators/user.validator";
+import { logger } from "@/index";
 
 export class RegisterUser {
   constructor(
+    private readonly _logger = logger,
     private readonly validator = new UserValidator(),
     private readonly userRepo: UserRepository = new UserDrizzleRepository(),
   ) {}
