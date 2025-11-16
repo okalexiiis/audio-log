@@ -15,7 +15,7 @@ app.get("/user/:username", async (c: Context) => {
   const uc = new SearchUserByUsername();
   const raw = c.req.param("username");
   const res = await uc.execute(raw);
-  return c.json(res, 200);
+  return c.json({ message: "User Found", data: res }, 200);
 });
 
 export default app;
