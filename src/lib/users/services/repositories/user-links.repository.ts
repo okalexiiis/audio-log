@@ -5,9 +5,7 @@ import {
   UserLinkRepository,
 } from "../../interfaces/user-links/repository";
 import { UserLink, UserLinks } from "../../models/UserLinks";
-import { PaginationParams } from "@/core/interfaces/api";
-import { and, asc, desc, eq, sql } from "drizzle-orm";
-import { applyFilters } from "@/core/utils/apply-filters";
+import { and, eq } from "drizzle-orm";
 
 export class UserLinksDrizzleRepository implements UserLinkRepository {
   constructor(private readonly _db = db) {}
