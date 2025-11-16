@@ -17,7 +17,6 @@ export class UserDrizzleRepository implements UserRepository {
       .insert(Users)
       .values(newUser)
       .returning();
-    // console.log("[USER REPOSITORY: save()] saved user: ", savedUser);
     return savedUser[0];
   }
 
@@ -33,7 +32,6 @@ export class UserDrizzleRepository implements UserRepository {
   ): Promise<User[] | { data: User[]; total: number }> {
     const offset = (page - 1) * limit;
 
-    // Construimos la base del query
     let query = this._db
       .select()
       .from(Users)
@@ -43,9 +41,7 @@ export class UserDrizzleRepository implements UserRepository {
 
     query = applyFilters({ entity: Users, filters, query });
 
-    // console.log("[USER REPOSITORY: findAll()] query: ", query);
     const data = await query;
-    // console.log("[USER REPOSITORY: findAll()] data: ", data);
     if (includeTotal) {
       const [{ count }] = await this._db
         .select({ count: sql<number>`count(*)` })
