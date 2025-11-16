@@ -1,4 +1,3 @@
-import { Logger } from "@/core/utils/logger";
 import { registerUserDTO } from "../../interfaces/users/dtos/register-user.dto";
 import { UserRepository } from "../../interfaces/users/repository";
 import { User } from "../../models/User";

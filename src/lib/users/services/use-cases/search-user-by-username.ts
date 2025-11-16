@@ -10,7 +10,7 @@ import { logger } from "@/index";
 
 export interface SearchUserByUsernameResult
   extends Omit<User, "password_hash" | "user_id"> {
-  links: UserLink[];
+  links: Partial<UserLink>[];
 }
 export class SearchUserByUsername {
   constructor(
@@ -30,9 +30,12 @@ export class SearchUserByUsername {
     }
     logger.debug("SEARCH BY USERNAME UC", "user: ", user);
     const userLinks = await this.userLinkRepo.search({ user_id: user.user_id });
-
+    const cleanLinks = userLinks.map((l) => {
+      const { id, user_id, ...rest } = l;
+      return rest;
+    });
     const { password_hash, user_id, ...rest } = user;
 
-    return { links: userLinks, ...rest };
+    return { links: cleanLinks, ...rest };
   }
 }

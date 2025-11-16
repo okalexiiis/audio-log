@@ -40,6 +40,28 @@ export class Validator {
   }
 
   /**
+   * Valida si un valor dado existe como valor dentro de una enumeración de TypeScript.
+   *
+   * @param value El valor a validar (puede ser string o number).
+   * @param enumType La definición del Enum (por ejemplo, MiEnum).
+   * @returns true si el valor está presente en el enum, false en caso contrario.
+   */
+  static isEnum(value: any, enumType: object): boolean {
+    if (Validator.isNullOrEmpty(value)) {
+      return false;
+    }
+
+    // Comprueba si el valor es una de las claves o valores del enum.
+    // Object.values() devuelve un array con los valores del enum (que incluyen tanto las claves como los valores para enums numéricos).
+    // La coerción a string permite comparar valores numéricos y de cadena del enum.
+    const enumValues = Object.values(enumType);
+
+    // Para los enums numéricos de TypeScript, Object.values() incluye duplicados
+    // (la clave string y su valor number), pero la comprobación `includes` sigue siendo válida.
+    return enumValues.includes(value as any);
+  }
+
+  /**
    * Valida si un valor es un array.
    */
   static isArray(value: any): boolean {

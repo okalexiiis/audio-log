@@ -21,11 +21,13 @@ export class UserLinksDrizzleRepository implements UserLinkRepository {
   async search({
     id,
     user_id,
-  }: Omit<UserLinkFilters, "created_at">): Promise<UserLink[]> {
+    platform,
+  }: UserLinkFilters): Promise<UserLink[]> {
     const where = [];
 
     if (id !== undefined) where.push(eq(UserLinks.id, id));
     if (user_id !== undefined) where.push(eq(UserLinks.user_id, user_id));
+    if (platform !== undefined) where.push(eq(UserLinks.platform, platform));
 
     if (where.length === 0) {
       throw new Error("Debe proporcionar al menos un filtro para findOne()");
